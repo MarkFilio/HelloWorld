@@ -1,0 +1,76 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+
+public class PhoneBookSystem {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Phone Book");
+        frame.setSize(400, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        HashMap<String, String> phoneBook = new HashMap<>();
+
+        JTextArea displayArea = new JTextArea();
+        displayArea.setEditable(false);
+        displayArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        JScrollPane scrollPane = new JScrollPane(displayArea);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(3, 2, 5, 5));
+        frame.add(inputPanel, BorderLayout.NORTH);
+
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField();
+        JLabel phoneLabel = new JLabel("Phone:");
+        JTextField phoneField = new JTextField();
+
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
+        inputPanel.add(phoneLabel);
+        inputPanel.add(phoneField);
+
+        JButton addButton = new JButton("Add");
+        JButton searchButton = new JButton("Search");
+        inputPanel.add(addButton);
+        inputPanel.add(searchButton);
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText().trim();
+                String phone = phoneField.getText().trim();
+                if (!name.isEmpty() && !phone.isEmpty()) {
+                    phoneBook.put(name, phone);
+                    displayArea.append("Added: " + name + " - " + phone + "\n");
+                    nameField.setText("");
+                    phoneField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Both fields must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText().trim();
+                if (!name.isEmpty()) {
+                    String phone = phoneBook.get(name);
+                    if (phone != null) {
+                        displayArea.append("Found: " + name + " - " + phone + "\n");
+                    } else {
+                        displayArea.append("Not Found: " + name + "\n");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Enter a name to search!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        frame.setVisible(true);
+    }
+}
